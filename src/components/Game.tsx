@@ -93,7 +93,7 @@ export default function Game() {
         <div className="hud-panel w-48 sm:w-60">
           <div className="mb-1 flex justify-between text-xs"><span>HEALTH</span><span>{Math.ceil(s.hp)}/100</span></div>
           <div className="h-3 w-full bg-muted"><div className="h-full bg-destructive transition-all" style={{ width: `${s.hp}%` }} /></div>
-          <div className="mt-2 flex justify-between text-xs"><span>{night ? "☾ NIGHT" : "☀ DAY"} {s.days}</span><span>☠ {s.kills}</span></div>
+          <div className="mt-2 flex justify-between text-xs"><span>{night ? "☾ NIGHT" : "☀ DAY"} {Math.floor(s.time / DAY_LEN) + 1}</span><span>☠ {s.kills}</span></div>
           <div className="mt-1 h-1.5 w-full bg-muted"><div className="h-full bg-primary" style={{ width: `${cycle}%` }} /></div>
         </div>
         <div className="hud-panel pointer-events-auto flex flex-col gap-1.5 text-xs">
@@ -116,7 +116,7 @@ export default function Game() {
         ))}
       </div>
 
-      <p className="pointer-events-none absolute bottom-3 left-3 hidden text-[10px] opacity-80 lg:block">
+      <p className="pointer-events-none absolute bottom-20 left-1/2 hidden -translate-x-1/2 text-[10px] opacity-80 lg:block">
         WASD/Arrows move · Left-click mine/attack · Right-click place · 1–4 select
       </p>
 
@@ -137,7 +137,7 @@ export default function Game() {
       {s.dead && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-overlay">
           <h2 className="text-4xl text-destructive">YOU DIED</h2>
-          <p className="text-sm">Survived {s.days} day(s) · {s.kills} zombies slain</p>
+          <p className="text-sm">Survived {Math.floor(s.time / DAY_LEN) + 1} day(s) · {s.kills} zombies slain</p>
           <button className="pixel-btn px-6 py-3 text-base" onClick={restart}>Respawn</button>
         </div>
       )}
