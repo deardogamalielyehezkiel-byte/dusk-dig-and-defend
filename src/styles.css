@@ -142,3 +142,28 @@
     color: var(--color-foreground);
   }
 }
+
+:root {
+  --background: oklch(0.2 0.03 250);
+  --foreground: oklch(0.97 0.01 90);
+  --muted: oklch(0.3 0.02 250);
+  --primary: oklch(0.85 0.16 90);
+  --primary-foreground: oklch(0.2 0.03 250);
+  --destructive: oklch(0.62 0.22 27);
+  --hud: oklch(0.15 0.02 250 / 0.75);
+  --hud-border: oklch(0.45 0.02 250);
+  --overlay: oklch(0.1 0.05 20 / 0.8);
+}
+@theme inline {
+  --font-pixel: "Press Start 2P", "Courier New", monospace;
+  --color-overlay: var(--overlay);
+}
+@layer components {
+  .hud-panel { background: var(--hud); border: 3px solid var(--hud-border); padding: 0.5rem 0.75rem; box-shadow: 0 4px 0 oklch(0 0 0 / 0.4); }
+  .pixel-btn { background: var(--primary); color: var(--primary-foreground); border: 3px solid oklch(0.5 0.1 70); padding: 0.35rem 0.5rem; font-size: 9px; box-shadow: inset 0 -3px 0 oklch(0 0 0 / 0.25); }
+  .pixel-btn:active { transform: translateY(2px); }
+  .hotbar-slot { position: relative; display: flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; background: var(--hud); border: 3px solid var(--hud-border); }
+  .hotbar-slot-active { border-color: var(--primary); transform: translateY(-3px); }
+  .touch-btn { width: 4.25rem; height: 4.25rem; background: var(--hud); border: 3px solid var(--hud-border); color: var(--foreground); font-size: 1.1rem; touch-action: none; }
+  .touch-btn:active, .touch-btn-active { border-color: var(--primary); color: var(--primary); }
+}
