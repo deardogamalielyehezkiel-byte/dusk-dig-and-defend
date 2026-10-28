@@ -24,7 +24,7 @@ export function idx(x: number, y: number) { return y * W + x; }
 export function get(s: State, x: number, y: number) {
   if (x < 0 || x >= W || y >= H) return B.Stone;
   if (y < 0) return B.Air;
-  return s.world[idx(x, y)];
+  return s.world[idx(x, y)] ?? B.Air;
 }
 
 export function makeWorld(): State {
@@ -41,7 +41,7 @@ export function makeWorld(): State {
   }
   for (let x = 3; x < W - 3; x++) {
     if (Math.random() < 0.08) {
-      const g = heights[x];
+      const g = heights[x]!;
       const th = 4 + Math.floor(Math.random() * 2);
       for (let i = 1; i <= th; i++) world[idx(x, g - i)] = B.Wood;
       for (let dx = -2; dx <= 2; dx++) for (let dy = -2; dy <= 0; dy++) {
@@ -53,7 +53,7 @@ export function makeWorld(): State {
   }
   const sx = Math.floor(W / 2);
   return {
-    world, px: sx * TILE, py: (heights[sx] - 3) * TILE, vx: 0, vy: 0, onGround: false, facing: 1,
+    world, px: sx * TILE, py: (heights[sx]! - 3) * TILE, vx: 0, vy: 0, onGround: false, facing: 1,
     hp: 100, inv: {}, tools: { sword: 0, pickaxe: 0 }, selected: B.Dirt,
     time: 0, zombies: [], dead: false, days: 1, kills: 0, hurt: 0,
   };
@@ -170,8 +170,8 @@ export function action(s: State, wx: number, wy: number): string | null {
   const b = get(s, tx, ty);
   if (tx < 0 || tx >= W || ty < 0 || ty >= H || b === B.Air) return null;
   s.world[idx(tx, ty)] = B.Air;
-  const drop = b === B.Grass ? B.Dirt : b;
-  s.inv[drop] = (s.inv[drop] || 0) + (b === B.Stone && s.tools.pickaxe ? 2 : 1);
+  const drop: number = b === B.Grass ? B.Dirt : b;
+  s.inv[drop] = (s.inv[drop] ?? 0) + (b === B.Stone && s.tools.pickaxe ? 2 : 1);
   return null;
 }
 
@@ -181,19 +181,19 @@ export function place(s: State, wx: number, wy: number) {
   if (Math.hypot(wx - cx, wy - cy) > REACH) return;
   const tx = Math.floor(wx / TILE), ty = Math.floor(wy / TILE);
   if (tx < 0 || tx >= W || ty < 0 || ty >= H || get(s, tx, ty) !== B.Air) return;
-  if (!(s.inv[s.selected] > 0)) return;
+  if (!((s.inv[s.selected] ?? 0) > 0)) return;
   // overlap check
   const bx = tx * TILE, by = ty * TILE;
   const ov = (x: number, y: number) => x < bx + TILE && x + PW > bx && y < by + TILE && y + PH > by;
   if (ov(s.px, s.py) || s.zombies.some((z) => ov(z.x, z.y))) return;
   s.world[idx(tx, ty)] = s.selected;
-  s.inv[s.selected]--;
+  s.inv[s.selected] = (s.inv[s.selected] ?? 1) - 1;
 }
 
 export function craft(s: State, item: "sword" | "pickaxe"): boolean {
-  const [mat, n] = item === "sword" ? [B.Wood, 4] : [B.Stone, 5];
+  const [mat, n]: [number, number] = item === "sword" ? [B.Wood, 4] : [B.Stone, 5];
   if ((s.inv[mat] || 0) < n) return false;
-  s.inv[mat] -= n;
+  s.inv[mat] = (s.inv[mat] ?? 0) - n;
   s.tools[item]++;
   return true;
 }

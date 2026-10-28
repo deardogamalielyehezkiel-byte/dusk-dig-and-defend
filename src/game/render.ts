@@ -7,9 +7,9 @@ function shade(hex: string, f: number) {
 }
 
 function drawBlock(ctx: CanvasRenderingContext2D, b: number, x: number, y: number) {
-  const col = BLOCK_COLORS[b];
+  const col = BLOCK_COLORS[b] ?? "#888888";
   if (b === B.Grass) {
-    ctx.fillStyle = BLOCK_COLORS[B.Dirt]; ctx.fillRect(x, y, TILE, TILE);
+    ctx.fillStyle = BLOCK_COLORS[B.Dirt]!; ctx.fillRect(x, y, TILE, TILE);
     ctx.fillStyle = col; ctx.fillRect(x, y, TILE, 9);
   } else {
     ctx.fillStyle = col; ctx.fillRect(x, y, TILE, TILE);

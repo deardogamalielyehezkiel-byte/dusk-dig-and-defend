@@ -42,7 +42,7 @@ export default function Game() {
       if (k === "a" || k === "arrowleft") input.current.left = down;
       else if (k === "d" || k === "arrowright") input.current.right = down;
       else if (k === "w" || k === "arrowup" || k === " ") input.current.jump = down;
-      else if (down && "1234".includes(k)) stateRef.current!.selected = SLOTS[+k - 1];
+      else if (down && "1234".includes(k)) stateRef.current!.selected = SLOTS[+k - 1]!;
       else return;
       e.preventDefault();
     };
